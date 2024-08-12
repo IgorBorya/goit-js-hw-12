@@ -1,30 +1,35 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export function renderGallery(images) {
-  const galleryContainer = document.querySelector('#gallery');
-  const markup = images
-    .map(
-      image => `
-      <a href="${image.largeImageURL}" class="gallery__item">
-        <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
-        <div class="info">
-          <p class="info-item"><b>Likes</b> ${image.likes}</p>
-          <p class="info-item"><b>Views</b> ${image.views}</p>
-          <p class="info-item"><b>Comments</b> ${image.comments}</p>
-          <p class="info-item"><b>Downloads</b> ${image.downloads}</p>
-        </div>
-      </a>
-    `
-    )
+export default function addImagesToHtml(images) {
+  const gallery = document.querySelector('.gallery');
+
+  const imagesHtml = images
+    .map(image => {
+      return `<li class="item-ul">
+  <a href="${image.largeImageURL}"><img src="${image.webformatURL}" alt="${image.tags}" /></a>
+  <div class="about-img-div">
+    <p class="description-img">Likes</p>
+    <p class="description-img">Views</p>
+    <p class="description-img">Comments</p>
+    <p class="description-img">Downloads</p>
+    <span class="description-value">${image.likes}</span>
+    <span class="description-value">${image.views}</span>
+    <span class="description-value">${image.comments}</span>
+    <span class="description-value">${image.downloads}</span>
+  </div>
+</li>`;
+    })
     .join('');
 
-  galleryContainer.insertAdjacentHTML('beforeend', markup);
+  gallery.insertAdjacentHTML('beforeend', imagesHtml);
 
-  const lightbox = new SimpleLightbox('.gallery a', {
+  const lightBox = new SimpleLightbox('.gallery li a', {
+    captions: true,
     captionsData: 'alt',
+    captionPosition: 'bottom',
     captionDelay: 250,
   });
 
-  lightbox.refresh();
+  lightBox.refresh();
 }
